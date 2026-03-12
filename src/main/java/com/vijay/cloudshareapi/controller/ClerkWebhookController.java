@@ -2,6 +2,7 @@ package com.vijay.cloudshareapi.controller;
 
 import com.vijay.cloudshareapi.dto.ProfileDTO;
 import com.vijay.cloudshareapi.service.ProfileService;
+import com.vijay.cloudshareapi.service.UserCreditsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -21,6 +22,7 @@ public class ClerkWebhookController {
     private String webhookSecret;
 
     private final ProfileService profileService;
+    private final UserCreditsService userCreditsService;
 
     @PostMapping("/clerk")
     public ResponseEntity<?> handleClerkWebhook(@RequestHeader("svix-id") String svixId,
@@ -119,6 +121,7 @@ public class ClerkWebhookController {
                 .build();
 
         profileService.createProfile(newProfile);
+        userCreditsService.createInitialCredits(clerkId);
 
     }
 
