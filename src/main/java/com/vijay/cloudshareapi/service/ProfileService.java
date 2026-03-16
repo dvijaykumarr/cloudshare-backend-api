@@ -8,6 +8,8 @@ import com.vijay.cloudshareapi.dto.ProfileDTO;
 import com.vijay.cloudshareapi.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -100,6 +102,14 @@ public class ProfileService {
             profileRepository.delete(existingProfile);
         }
 
+    }
+
+    public ProfileDocument getCurrentProfile(){
+        if(SecurityContextHolder.getContext().getAuthentication() == null){
+            throw new UsernameNotFoundException("User not authenticated");
+        }
+        String clerkId = SecurityContextHolder.getContext().getAuthentication().getName();
+        return profileRepository.findByClerkId(clerkId);
     }
 
 }
